@@ -1,15 +1,13 @@
 package main
 
 import (
-	"github.com/dayan-be/demo-service/logic"
-	"github.com/dy-platform/user-srv-info/handler"
-	"github.com/dayan-be/demo-service/proto/demo"
-	"github.com/dayan-be/kit"
+	"github.com/dy-gopkg/kit"
+	pb "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
+	h "github.com/dy-platform/user-srv-info/handler"
 )
 
 func main() {
 	kit.Init()
-	demo.RegisterSayHandler(kit.DefaultService.Server(),&logic.Handle{})
-
+	pb.RegisterUserInfoHandler(kit.Server(),&h.Handle{})
 	kit.Run()
 }

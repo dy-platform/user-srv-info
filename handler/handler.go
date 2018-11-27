@@ -1,17 +1,19 @@
 package handler
 
 import (
-	info "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
-	"github.com/sirupsen/logrus"
 	"context"
+	pb "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
 )
 
 type Handle struct {
 
 }
 
-func (h *Handle) Hello(ctx context.Context, req *info.HelloReq, rsp *info.HelloRsp) error {
-	logrus.Debugf("hello %s", req.Name)
-	rsp.Msg = "my name is Jerry"
+
+func (h *Handle)CreateUser(ctx context.Context,req *pb.CreateUserReq, resp *pb.CommonResp)error{
+	return nil
+}
+
+func (h *Handle) GetUserInfo(ctx context.Context, req *pb.GetUserInfoReq, resp *pb.CommonResp) error {
 	return nil
 }

@@ -5,6 +5,7 @@ package platform_user_srv_info
 
 import (
 	fmt "fmt"
+	idl "github.com/dy-platform/user-srv-info/idl"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
 )
@@ -20,13 +21,189 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
+//获取用户信息请求参数
+type GetUserInfoReq struct {
+	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	AttrNameList         []string `protobuf:"bytes,2,rep,name=AttrNameList,proto3" json:"AttrNameList,omitempty"`
+	AppId                int32    `protobuf:"varint,3,opt,name=AppId,proto3" json:"AppId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetUserInfoReq) Reset()         { *m = GetUserInfoReq{} }
+func (m *GetUserInfoReq) String() string { return proto.CompactTextString(m) }
+func (*GetUserInfoReq) ProtoMessage()    {}
+func (*GetUserInfoReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f140d5b28dddb141, []int{0}
+}
+
+func (m *GetUserInfoReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetUserInfoReq.Unmarshal(m, b)
+}
+func (m *GetUserInfoReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetUserInfoReq.Marshal(b, m, deterministic)
+}
+func (m *GetUserInfoReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetUserInfoReq.Merge(m, src)
+}
+func (m *GetUserInfoReq) XXX_Size() int {
+	return xxx_messageInfo_GetUserInfoReq.Size(m)
+}
+func (m *GetUserInfoReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetUserInfoReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetUserInfoReq proto.InternalMessageInfo
+
+func (m *GetUserInfoReq) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *GetUserInfoReq) GetAttrNameList() []string {
+	if m != nil {
+		return m.AttrNameList
+	}
+	return nil
+}
+
+func (m *GetUserInfoReq) GetAppId() int32 {
+	if m != nil {
+		return m.AppId
+	}
+	return 0
+}
+
+type CommonResp struct {
+	BaseResp             *idl.Resp `protobuf:"bytes,1,opt,name=BaseResp,proto3" json:"BaseResp,omitempty"`
+	Data                 string    `protobuf:"bytes,2,opt,name=Data,proto3" json:"Data,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *CommonResp) Reset()         { *m = CommonResp{} }
+func (m *CommonResp) String() string { return proto.CompactTextString(m) }
+func (*CommonResp) ProtoMessage()    {}
+func (*CommonResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f140d5b28dddb141, []int{1}
+}
+
+func (m *CommonResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CommonResp.Unmarshal(m, b)
+}
+func (m *CommonResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CommonResp.Marshal(b, m, deterministic)
+}
+func (m *CommonResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CommonResp.Merge(m, src)
+}
+func (m *CommonResp) XXX_Size() int {
+	return xxx_messageInfo_CommonResp.Size(m)
+}
+func (m *CommonResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_CommonResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CommonResp proto.InternalMessageInfo
+
+func (m *CommonResp) GetBaseResp() *idl.Resp {
+	if m != nil {
+		return m.BaseResp
+	}
+	return nil
+}
+
+func (m *CommonResp) GetData() string {
+	if m != nil {
+		return m.Data
+	}
+	return ""
+}
+
+type CreateUserReq struct {
+	UserId               int64    `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	AttrNameList         []string `protobuf:"bytes,2,rep,name=AttrNameList,proto3" json:"AttrNameList,omitempty"`
+	AppId                int32    `protobuf:"varint,3,opt,name=AppId,proto3" json:"AppId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateUserReq) Reset()         { *m = CreateUserReq{} }
+func (m *CreateUserReq) String() string { return proto.CompactTextString(m) }
+func (*CreateUserReq) ProtoMessage()    {}
+func (*CreateUserReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f140d5b28dddb141, []int{2}
+}
+
+func (m *CreateUserReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateUserReq.Unmarshal(m, b)
+}
+func (m *CreateUserReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateUserReq.Marshal(b, m, deterministic)
+}
+func (m *CreateUserReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateUserReq.Merge(m, src)
+}
+func (m *CreateUserReq) XXX_Size() int {
+	return xxx_messageInfo_CreateUserReq.Size(m)
+}
+func (m *CreateUserReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateUserReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateUserReq proto.InternalMessageInfo
+
+func (m *CreateUserReq) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *CreateUserReq) GetAttrNameList() []string {
+	if m != nil {
+		return m.AttrNameList
+	}
+	return nil
+}
+
+func (m *CreateUserReq) GetAppId() int32 {
+	if m != nil {
+		return m.AppId
+	}
+	return 0
+}
+
+func init() {
+	proto.RegisterType((*GetUserInfoReq)(nil), "platform.user.srv.info.GetUserInfoReq")
+	proto.RegisterType((*CommonResp)(nil), "platform.user.srv.info.CommonResp")
+	proto.RegisterType((*CreateUserReq)(nil), "platform.user.srv.info.CreateUserReq")
+}
+
 func init() { proto.RegisterFile("info.proto", fileDescriptor_f140d5b28dddb141) }
 
 var fileDescriptor_f140d5b28dddb141 = []byte{
-	// 75 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xca, 0xcc, 0x4b, 0xcb,
-	0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2b, 0xc8, 0x49, 0x2c, 0x49, 0xcb, 0x2f, 0xca,
-	0xd5, 0x2b, 0x2d, 0x4e, 0x2d, 0xd2, 0x2b, 0x2e, 0x2a, 0xd3, 0x03, 0xc9, 0x1a, 0x71, 0x71, 0x71,
-	0x84, 0x16, 0xa7, 0x16, 0x79, 0xe6, 0xa5, 0xe5, 0x27, 0xb1, 0x81, 0x95, 0x1a, 0x03, 0x02, 0x00,
-	0x00, 0xff, 0xff, 0xd6, 0x0f, 0xef, 0x59, 0x38, 0x00, 0x00, 0x00,
+	// 258 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x91, 0xcf, 0x4a, 0x33, 0x31,
+	0x14, 0xc5, 0x49, 0xe7, 0x6b, 0x69, 0x4f, 0x3f, 0x5d, 0x5c, 0xa4, 0x0c, 0x5d, 0x0d, 0x01, 0xcb,
+	0xac, 0xb2, 0xa8, 0x4f, 0x50, 0x2b, 0x68, 0x41, 0x5c, 0x04, 0x44, 0x5c, 0x66, 0xe8, 0x1d, 0x28,
+	0x38, 0x93, 0x98, 0x44, 0x1f, 0xcf, 0x67, 0x93, 0x49, 0xfd, 0x33, 0x05, 0x0b, 0x6e, 0xdc, 0xdd,
+	0x73, 0xef, 0x4d, 0x72, 0xce, 0x2f, 0xc0, 0xae, 0xad, 0xad, 0x72, 0xde, 0x46, 0x4b, 0x33, 0xf7,
+	0x64, 0x62, 0x6d, 0x7d, 0xa3, 0x5e, 0x02, 0x7b, 0x15, 0xfc, 0xab, 0xea, 0xa6, 0x73, 0x54, 0x26,
+	0xf0, 0x7e, 0x47, 0x56, 0x38, 0xbd, 0xe6, 0x78, 0x1f, 0xd8, 0x6f, 0xda, 0xda, 0x6a, 0x7e, 0xa6,
+	0x19, 0x46, 0x49, 0x6e, 0x73, 0x51, 0x88, 0x32, 0xd3, 0x1f, 0x8a, 0x24, 0xfe, 0xaf, 0x62, 0xf4,
+	0x77, 0xa6, 0xe1, 0xdb, 0x5d, 0x88, 0xf9, 0xa0, 0xc8, 0xca, 0x89, 0x3e, 0xe8, 0xd1, 0x19, 0x86,
+	0x2b, 0xe7, 0x36, 0xdb, 0x3c, 0x2b, 0x44, 0x39, 0xd4, 0x7b, 0x21, 0x6f, 0x80, 0xb5, 0x6d, 0x1a,
+	0xdb, 0x6a, 0x0e, 0x8e, 0x16, 0x18, 0x5f, 0x9a, 0xc0, 0x5d, 0x9d, 0x5e, 0x98, 0x2e, 0xa1, 0x92,
+	0xa1, 0xae, 0xa3, 0xbf, 0x66, 0x44, 0xf8, 0x77, 0x65, 0xa2, 0xc9, 0x07, 0x85, 0x28, 0x27, 0x3a,
+	0xd5, 0xd2, 0xe0, 0x64, 0xed, 0xd9, 0x44, 0xee, 0x3c, 0xfd, 0x89, 0xd9, 0xe5, 0x9b, 0xc0, 0xf8,
+	0x13, 0x07, 0x3d, 0x62, 0xda, 0xa3, 0x43, 0x0b, 0xf5, 0x33, 0x51, 0x75, 0x88, 0x70, 0x2e, 0x8f,
+	0xed, 0xf5, 0x30, 0x3c, 0x00, 0xdf, 0x51, 0xe8, 0xfc, 0xe8, 0x89, 0x7e, 0xdc, 0xdf, 0x5c, 0x5c,
+	0x8d, 0xd2, 0xc7, 0x5e, 0xbc, 0x07, 0x00, 0x00, 0xff, 0xff, 0x2a, 0xfe, 0xf7, 0xe3, 0x0a, 0x02,
+	0x00, 0x00,
 }

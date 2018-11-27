@@ -8,12 +8,16 @@ It is generated from these files:
 	info.proto
 
 It has these top-level messages:
+	GetUserInfoReq
+	CommonResp
+	CreateUserReq
 */
 package platform_user_srv_info
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
+import _ "github.com/dy-platform/user-srv-info/idl"
 
 import (
 	client "github.com/micro/go-micro/client"
@@ -40,6 +44,9 @@ var _ server.Option
 // Client API for UserInfo service
 
 type UserInfoService interface {
+	// 查询用户信息
+	GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...client.CallOption) (*CommonResp, error)
+	CreateUser(ctx context.Context, in *CreateUserReq, opts ...client.CallOption) (*CommonResp, error)
 }
 
 type userInfoService struct {
@@ -60,13 +67,38 @@ func NewUserInfoService(name string, c client.Client) UserInfoService {
 	}
 }
 
+func (c *userInfoService) GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...client.CallOption) (*CommonResp, error) {
+	req := c.c.NewRequest(c.name, "UserInfo.GetUserInfo", in)
+	out := new(CommonResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userInfoService) CreateUser(ctx context.Context, in *CreateUserReq, opts ...client.CallOption) (*CommonResp, error) {
+	req := c.c.NewRequest(c.name, "UserInfo.CreateUser", in)
+	out := new(CommonResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for UserInfo service
 
 type UserInfoHandler interface {
+	// 查询用户信息
+	GetUserInfo(context.Context, *GetUserInfoReq, *CommonResp) error
+	CreateUser(context.Context, *CreateUserReq, *CommonResp) error
 }
 
 func RegisterUserInfoHandler(s server.Server, hdlr UserInfoHandler, opts ...server.HandlerOption) error {
 	type userInfo interface {
+		GetUserInfo(ctx context.Context, in *GetUserInfoReq, out *CommonResp) error
+		CreateUser(ctx context.Context, in *CreateUserReq, out *CommonResp) error
 	}
 	type UserInfo struct {
 		userInfo
@@ -77,4 +109,12 @@ func RegisterUserInfoHandler(s server.Server, hdlr UserInfoHandler, opts ...serv
 
 type userInfoHandler struct {
 	UserInfoHandler
+}
+
+func (h *userInfoHandler) GetUserInfo(ctx context.Context, in *GetUserInfoReq, out *CommonResp) error {
+	return h.UserInfoHandler.GetUserInfo(ctx, in, out)
+}
+
+func (h *userInfoHandler) CreateUser(ctx context.Context, in *CreateUserReq, out *CommonResp) error {
+	return h.UserInfoHandler.CreateUser(ctx, in, out)
 }
