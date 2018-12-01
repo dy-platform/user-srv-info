@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"github.com/dy-platform/user-srv-passport/util/config"
+	"github.com/dy-platform/user-srv-info/util/config"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 	"os"
@@ -25,12 +25,12 @@ func DBInit() {
 	//logrus.Infof()
 	var err error
 	rArgs := fmt.Sprintf(dbArgsFormat,
-		uconfig.DefaultConfig.UserPassportDB.User,
-		uconfig.DefaultConfig.UserPassportDB.Password,
-		uconfig.DefaultConfig.UserPassportDB.ReadAddress,
-		uconfig.DefaultConfig.UserPassportDB.DBName,
-		uconfig.DefaultConfig.UserPassportDB.ReadTimeout,
-		uconfig.DefaultConfig.UserPassportDB.WriteTimeout)
+		uconfig.DefaultConfig.UserInfoDB.User,
+		uconfig.DefaultConfig.UserInfoDB.Password,
+		uconfig.DefaultConfig.UserInfoDB.ReadAddress,
+		uconfig.DefaultConfig.UserInfoDB.DBName,
+		uconfig.DefaultConfig.UserInfoDB.ReadTimeout,
+		uconfig.DefaultConfig.UserInfoDB.WriteTimeout)
 
 	db.rClient, err = gorm.Open("mysql", rArgs)
 	if err != nil {
@@ -39,12 +39,12 @@ func DBInit() {
 	}
 
 	wArgs := fmt.Sprintf(dbArgsFormat,
-		uconfig.DefaultConfig.UserPassportDB.User,
-		uconfig.DefaultConfig.UserPassportDB.Password,
-		uconfig.DefaultConfig.UserPassportDB.ReadAddress,
-		uconfig.DefaultConfig.UserPassportDB.DBName,
-		uconfig.DefaultConfig.UserPassportDB.ReadTimeout,
-		uconfig.DefaultConfig.UserPassportDB.WriteTimeout)
+		uconfig.DefaultConfig.UserInfoDB.User,
+		uconfig.DefaultConfig.UserInfoDB.Password,
+		uconfig.DefaultConfig.UserInfoDB.ReadAddress,
+		uconfig.DefaultConfig.UserInfoDB.DBName,
+		uconfig.DefaultConfig.UserInfoDB.ReadTimeout,
+		uconfig.DefaultConfig.UserInfoDB.WriteTimeout)
 
 	db.wClient, err = gorm.Open("mysql", wArgs)
 	if err != nil {
@@ -58,4 +58,13 @@ func DBInit() {
 	db.wClient.DB().SetMaxOpenConns(20)
 
 
+}
+
+func WriteDB()*gorm.DB{
+	return db.wClient
+}
+
+
+func ReadDB()*gorm.DB{
+	return db.rClient
 }
