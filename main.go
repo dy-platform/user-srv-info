@@ -3,13 +3,23 @@ package main
 import (
 	"github.com/dy-gopkg/kit"
 	"github.com/dy-platform/user-srv-info/dal/db"
-	pb "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
-	h "github.com/dy-platform/user-srv-info/handler"
+	info "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
+	"github.com/dy-platform/user-srv-info/handler"
+	"github.com/sirupsen/logrus"
+	"github.com/dy-platform/user-srv-info/util/config"
 )
 
 func main() {
 	kit.Init()
-	pb.RegisterUserInfoHandler(kit.Server(),&h.Handle{})
-	db.DBInit()
+
+	uconfig.Init()
+
+	// 初始化数据库
+	db.Init()
+
+	err := info.RegisterUserInfoHandler(kit.Server(), &handler.Handle{})
+	if err != nil {
+		logrus.Fatalf("RegisterPassportHandler error:%v", err)
+	}
 	kit.Run()
 }

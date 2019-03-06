@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"github.com/dy-platform/user-srv-info/Model"
+	"github.com/sirupsen/logrus"
 	"github.com/dy-platform/user-srv-info/dal/db"
-	pb "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
-	basePB "github.com/dy-platform/user-srv-info/idl"
+	"github.com/dy-platform/user-srv-info/idl"
+	info "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
 )
 
 type Handle struct {
@@ -14,37 +14,51 @@ type Handle struct {
 }
 
 
-func (h *Handle)CreateUser(ctx context.Context,req *pb.CreateUserReq, resp *pb.CommonResp)error{
-	userModel := Model.UserInfo{
-		Uid:       req.UserId,
-		Nick:      req.NickName,
-		Gender:    req.Gender,
-		AvatarUrl: req.AvatarUrl,
-		UserType:  int(req.UserType),
+func (h *Handle)CreateUser(ctx context.Context,req *info.CreateUserReq, resp *info.CreateUserResp) error {
+	resp.BaseResp = &base.Resp{
+		Code:int32(base.CODE_OK),
 	}
 
-	wdb := db.WriteDB()
-	wdb.NewRecord(userModel)
+	if req.UserId == 0 {
+		resp.BaseResp.Code = int32(base.CODE_INVALID_PARAMETER)
+		return nil
+	}
+
+	err := db.InsertUserInfo(req.UserId, "", req.NickName, req.AvatarUrl, "")
+	if err != nil {
+		logrus.Warnf("db.InsertUserInfo error:%v", err)
+		resp.BaseResp.Code = int32(base.CODE_DATA_EXCEPTION)
+		resp.BaseResp.Msg = err.Error()
+		return nil
+	}
 	return nil
 }
 
-func (h *Handle) GetUserInfo(ctx context.Context, req *pb.GetUserInfoReq, resp *pb.CommonResp) error {
-	user := Model.UserInfo{}
-	rdb := db.ReadDB()
-	var fields  []string
-	for _, attr := range req.AttrNameList {
-		fields =append(fields, attr)
+func (h *Handle) GetUserInfo(ctx context.Context, req *info.GetUserInfoReq, resp *info.GetUserInfoResp) error {
+	resp.BaseResp = &base.Resp{
+		Code:int32(base.CODE_OK),
 	}
 
-	rdb.Select(fields).Where(&Model.UserInfo{Uid:req.UserId}).First(&user)
-
-	data, err := json.Marshal(user)
-
-	if err != nil{
-		resp.BaseResp.Code = uint32(basePB.CODE_FAILED)
-	}else{
-		resp.BaseResp.Code = uint32(basePB.CODE_SUCESS)
+	if req.UserId == 0 {
+		resp.BaseResp.Code = int32(base.CODE_INVALID_PARAMETER)
+		return nil
 	}
+
+	ret, err := db.GetOneUserInfo(req.UserId, req.Fields)
+	if err != nil {
+		logrus.Warnf("db.GetOneUserInfo error:%v", err)
+		resp.BaseResp.Code = int32(base.CODE_DATA_EXCEPTION)
+		resp.BaseResp.Msg = err.Error()
+		return nil
+	}
+
+	data, err := json.Marshal(ret)
+	if err != nil {
+		logrus.Warnf("json marshal error:%v", err)
+		resp.BaseResp.Code = int32(base.CODE_DATA_EXCEPTION)
+		resp.BaseResp.Msg = err.Error()
+	}
+
 	resp.Data = string(data)
 	return nil
 }

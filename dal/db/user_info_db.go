@@ -1,70 +1,96 @@
 package db
 
 import (
-	"fmt"
+	"errors"
 	"github.com/dy-platform/user-srv-info/util/config"
-	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
-	"os"
-	"sync"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"time"
 )
 
-type UserPassportDB struct {
-	rClient *gorm.DB
-	wClient *gorm.DB
+var (
+	defaultMgo *mgo.Session
+)
 
-	sync.RWMutex
+func Mgo() *mgo.Session {
+	return defaultMgo
+}
+
+func Init() {
+	dialInfo := &mgo.DialInfo{
+		Addrs:     uconfig.DefaultMgoConf.Addr,
+		Direct:    false,
+		Timeout:   time.Second * 3,
+		PoolLimit: uconfig.DefaultMgoConf.PoolLimit,
+		Username:  uconfig.DefaultMgoConf.Username,
+		Password:  uconfig.DefaultMgoConf.Password,
+	}
+
+	ses, err := mgo.DialWithInfo(dialInfo)
+	if err != nil {
+		logrus.Fatalf("dail mgo server error:%v", err)
+	}
+
+	ses.SetMode(mgo.Monotonic, true)
+	defaultMgo = ses
+}
+
+type UserInfo struct {
+	UID       int64  `bson:"_id"`
+	Nickname  string  `bson:"nickname"`
+	Name      string `bson:"name"`
+	AvatarURL string `bson:"avatar_url"`
+	IDNumber  string `bson:"id_number"`
+	CreatedAt int64  `bson:"created_at"`
+	UpdatedAt int64  `bson:"updated_at"`
 }
 
 var (
-	db = &UserPassportDB{}
-	dbArgsFormat = "%s:%s@tcp(%s)/%s?timeout=%s&readTimeout=%s&writeTimeout=%s&maxAllowedPacket=536870912"
+	DBUser = "dy_user"
+	CUserInfo  = "user_info"
 )
 
-func DBInit() {
-	//logrus.Infof()
-	var err error
-	rArgs := fmt.Sprintf(dbArgsFormat,
-		uconfig.DefaultConfig.UserInfoDB.User,
-		uconfig.DefaultConfig.UserInfoDB.Password,
-		uconfig.DefaultConfig.UserInfoDB.ReadAddress,
-		uconfig.DefaultConfig.UserInfoDB.DBName,
-		uconfig.DefaultConfig.UserInfoDB.ReadTimeout,
-		uconfig.DefaultConfig.UserInfoDB.WriteTimeout)
+func InsertUserInfo(uid int64, nickname, name, avatar, idNumber string) error {
+	ses := defaultMgo.Copy()
+	if ses == nil {
+		logrus.Warnf("mgo session is nil")
+		return errors.New("mgo session is nil")
+	}
+	defer ses.Close()
 
-	db.rClient, err = gorm.Open("mysql", rArgs)
-	if err != nil {
-		logrus.Warnf("open read-mysqldb failed. args:%s", rArgs)
-		os.Exit(1)
+	now := time.Now().Unix()
+	info := &UserInfo{
+		UID:       uid,
+		Nickname:  nickname,
+		Name:      name,
+		AvatarURL: avatar,
+		IDNumber:  idNumber,
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
-	wArgs := fmt.Sprintf(dbArgsFormat,
-		uconfig.DefaultConfig.UserInfoDB.User,
-		uconfig.DefaultConfig.UserInfoDB.Password,
-		uconfig.DefaultConfig.UserInfoDB.ReadAddress,
-		uconfig.DefaultConfig.UserInfoDB.DBName,
-		uconfig.DefaultConfig.UserInfoDB.ReadTimeout,
-		uconfig.DefaultConfig.UserInfoDB.WriteTimeout)
+	return ses.DB(DBUser).C(CUserInfo).Insert(info)
+}
 
-	db.wClient, err = gorm.Open("mysql", wArgs)
+func GetOneUserInfo(uid int64, fields []string) (ret *UserInfo, err error) {
+	ses := defaultMgo.Copy()
+	if ses == nil {
+		logrus.Warnf("mgo session is nil")
+		return nil, errors.New("mgo session is nil")
+	}
+	defer ses.Close()
+
+	query := bson.M{"_id":uid}
+	ret = &UserInfo{}
+	if len(fields) == 0 {
+		err = ses.DB(DBUser).C(CUserInfo).Find(query).One(ret)
+	} else {
+
+	}
 	if err != nil {
-		logrus.Warnf("open write-mysqldb failed. args:%s", wArgs)
-		os.Exit(1)
+		return nil, err
 	}
 
-	// TODO PING
-
-	db.wClient.DB().SetMaxIdleConns(10)
-	db.wClient.DB().SetMaxOpenConns(20)
-
-
-}
-
-func WriteDB()*gorm.DB{
-	return db.wClient
-}
-
-
-func ReadDB()*gorm.DB{
-	return db.rClient
+	return ret, nil
 }
