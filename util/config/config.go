@@ -7,12 +7,11 @@ import (
 
 type (
 	MongoDBConfig struct {
-		Addr []string `json:"addr"`
-		Username string `json:"username"`
-		Password string `json:"password"`
-		PoolLimit int `json:"poolLimit"`
+		Addr      []string `json:"addr"`
+		Username  string   `json:"username"`
+		Password  string   `json:"password"`
+		PoolLimit int      `json:"poolLimit"`
 	}
-
 )
 
 var (
