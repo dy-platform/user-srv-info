@@ -10,12 +10,12 @@ BUILD_TIME=`date +%FT%T%z`
 LDFLAGS=-ldflags "-X main.BuildTime=${BUILD_TIME}"
 
 .PHONY:all clean release
-all:clean release
+
+all:
+	rm -f ${OUTPUT} && go build ${LDFLAGS} -o ${OUTPUT} main.go
 
 clean:
 	rm -f ${OUTPUT}
 
-release:
-	go build ${LDFLAGS} -o ${OUTPUT} main.go
 
 

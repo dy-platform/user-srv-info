@@ -1,7 +1,7 @@
 module github.com/dy-platform/user-srv-info
 
 require (
-	github.com/dy-gopkg/kit v0.0.0-20190305071224-09d7ea9cbb65
+	github.com/dy-gopkg/kit v0.0.0-20190308061109-6d2b587a8522
 	github.com/golang/protobuf v1.3.0
 	github.com/micro/go-config v1.0.0
 	github.com/micro/go-micro v1.0.0
