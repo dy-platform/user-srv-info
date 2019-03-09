@@ -5,14 +5,14 @@ import (
 	"github.com/dy-platform/user-srv-info/dal/db"
 	"github.com/dy-platform/user-srv-info/handler"
 	info "github.com/dy-platform/user-srv-info/idl/platform/user/srv-info"
-	"github.com/dy-platform/user-srv-info/util/config"
+	"github.com/dy-platform/user-srv-info/util"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	micro.Init()
 
-	uconfig.Init()
+	util.Init()
 
 	// 初始化数据库
 	db.Init()
