@@ -3,6 +3,8 @@ package util
 import (
 	"github.com/micro/go-config"
 	"github.com/sirupsen/logrus"
+	"os"
+	"strings"
 )
 
 type (
@@ -27,6 +29,12 @@ func Init() {
 
 	if len(DefaultMgoConf.Addr) == 0 {
 		logrus.Fatalf("invalid mgo addr")
+	}
+
+	for k, _ := range DefaultMgoConf.Addr {
+		if strings.Index(DefaultMgoConf.Addr[k], "$") == 0 {
+			DefaultMgoConf.Addr[k] = os.Getenv(strings.TrimPrefix(DefaultMgoConf.Addr[k], "$"))
+		}
 	}
 
 }
