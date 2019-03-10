@@ -2,7 +2,7 @@ registry:
   address: $REGISTRY_HOST
 
 service:
-  name: user-srv-info
+  name: platform.user.srv.info
   version: v1.0.0
   metadata:
     id: "1"
