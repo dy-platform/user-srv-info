@@ -17,5 +17,8 @@ release:
 clean:
 	rm -f ${OUTPUT}
 
+docker:
+	docker build --build-arg HOST=$HOST -t platform-${OUTPUT}:latest
+
 
 
