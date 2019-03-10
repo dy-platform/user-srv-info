@@ -12,7 +12,7 @@ LDFLAGS=-ldflags "-X main.BuildTime=${BUILD_TIME}"
 .PHONY:all clean release
 
 release:
-	rm -f ${OUTPUT} && go build ${LDFLAGS} -o ${OUTPUT} main.go
+	rm -f ${OUTPUT} && CGO_ENABLED=0 go build ${LDFLAGS} -o ${OUTPUT} main.go
 
 clean:
 	rm -f ${OUTPUT}
